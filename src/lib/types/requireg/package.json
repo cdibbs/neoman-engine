@@ -1,0 +1,10 @@
+{
+  "name": "requireg",
+  "version": "0.1.0",
+  "repository": "https://github.com/cdibbs/neoman",
+  "description": "Neoman templating engine.",
+  "typings": "index.d.ts",
+  "main": "",
+  "author": "",
+  "license": "ISC"
+}

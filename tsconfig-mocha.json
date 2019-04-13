@@ -1,0 +1,35 @@
+{
+	"compilerOptions": {
+        "baseUrl": "./",
+		"experimentalDecorators": true,
+		"lib": ["es6", "dom"],
+		"module": "commonjs",
+		"target": "es6",
+		"noImplicitAny": true,
+		"suppressImplicitAnyIndexErrors": true,
+		"moduleResolution": "node",
+		"emitDecoratorMetadata": true,
+		"preserveConstEnums": true,
+		"sourceMap": true,
+		"declaration": true,
+		"outDir": "test",
+		"removeComments": false,
+		"typeRoots": [
+			"node_modules/@types",
+			"src/lib/types"
+		],
+		"types": [
+			"@types/node",
+			"@types/mocha",
+			"requireg"
+		]
+	},
+	"include": [
+		"src/lib/**/*.spec.ts",
+		"src/e2e/**/*.e2e.ts"
+	],
+	"exclude": [
+		"src/e2e/resources",
+		"node_modules"
+	]
+}
