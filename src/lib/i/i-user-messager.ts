@@ -1,4 +1,3 @@
-import { Ii18nFunction } from './i-i18n-function';
 import { UnionKeyToValue } from '../union-key-to-value';
 
 export interface IConsole {

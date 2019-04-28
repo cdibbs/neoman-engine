@@ -1,8 +1,7 @@
 import { inject, injectable } from 'inversify';
 import TYPES from '../di/types';
-import { IFilePatterns, IHandlerService, IUserMessager } from '../i';
+import { IFilePatterns, IUserMessager } from '../i';
 import { RuleMatchResult } from '../models';
-import { IPluginManager } from '../plugin-manager/i-plugin-manager';
 import { ITransform, Transforms } from '../user-extensibility/template';
 import { BaseTransformManager } from './base-transform-manager';
 import { ITransformManager } from './i';
@@ -12,11 +11,9 @@ export class ContentTransformManager extends BaseTransformManager implements ITr
 
     constructor(
         @inject(TYPES.FilePatterns) filePatterns: IFilePatterns,
-        @inject(TYPES.UserMessager) msg: IUserMessager,
-        @inject(TYPES.HandlerService) hnd: IHandlerService,
-        @inject(TYPES.PluginManager) protected plugMgr: IPluginManager
+        @inject(TYPES.UserMessager) msg: IUserMessager
     ) {
-        super(filePatterns, msg, hnd, plugMgr);
+        super(filePatterns, msg);
     }
 
     async applyTransforms(path: string, content: string, rdef: Transforms): Promise<string> {

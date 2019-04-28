@@ -19,12 +19,11 @@
 			"lib/types"
 		],
 		"types": [
-			"@types/node",
-			"requireg"
+			"@types/node"
 		]
 	},
 	"include": [
-		"**/*.ts"
+		"**/*.ts", "lib/discoverer", "lib/transformer"
 	],
 	"exclude": [
 	]

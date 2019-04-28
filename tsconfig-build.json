@@ -2,9 +2,9 @@
 	"compilerOptions": {
         "baseUrl": "./",
 		"experimentalDecorators": true,
-		"lib": ["es6", "dom"],
+		"lib": ["es5", "dom"],
 		"module": "commonjs",
-		"target": "es6",
+		"target": "es5",
 		"noImplicitAny": true,
 		"suppressImplicitAnyIndexErrors": true,
 		"moduleResolution": "node",
@@ -12,19 +12,18 @@
 		"preserveConstEnums": true,
 		"sourceMap": true,
 		"declaration": true,
-		"outDir": "dist",
+		"outDir": "lib",
 		"removeComments": false,
 		"typeRoots": [
 			"node_modules/@types",
 			"src/lib/types"
 		],
 		"types": [
-			"@types/node",
-			"requireg"
+			"@types/node"
 		]
 	},
 	"files": [
-		"src/index.ts"
+		"src/lib/index.ts"
 	],
 	"exclude": [
 		"node_modules",

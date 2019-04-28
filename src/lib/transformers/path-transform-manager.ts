@@ -1,13 +1,10 @@
 import { inject, injectable } from 'inversify';
 import TYPES from '../di/types';
-import { IPluginManager } from '../plugin-manager/i-plugin-manager';
 import { BaseTransformManager } from './base-transform-manager';
 import { TemplateConfiguration } from './models/configuration';
 import { IPathTransformManager } from './i';
-import { IFilePatterns, IUserMessager, IHandlerService } from '../i';
+import { IFilePatterns, IUserMessager } from '../i';
 import { PathTransforms, IPathTransform } from '../user-extensibility/template';
-let requireg = require('requireg');
-
 
 @injectable()
 export class PathTransformManager extends BaseTransformManager implements IPathTransformManager{
@@ -16,11 +13,9 @@ export class PathTransformManager extends BaseTransformManager implements IPathT
 
     constructor(
         @inject(TYPES.FilePatterns) filePatterns: IFilePatterns,
-        @inject(TYPES.UserMessager) msg: IUserMessager,
-        @inject(TYPES.HandlerService) hnd: IHandlerService,
-        @inject(TYPES.PluginManager) protected plugMgr: IPluginManager
+        @inject(TYPES.UserMessager) msg: IUserMessager
     ) {
-        super(filePatterns, msg, hnd, plugMgr);
+        super(filePatterns, msg);
     }
 
     async applyTransforms(path: string, tdef: PathTransforms): Promise<string> {

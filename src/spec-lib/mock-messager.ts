@@ -2,8 +2,6 @@ import * as sinon from 'sinon';
 
 import * as path from 'path';
 import { UserMessager } from '../lib/user-messager';
-import * as i from '../lib/i';
-import * as i18n from 'i18n';
 
 export let mockMessagerFactory = ( { echo = false }: { echo: boolean } = { echo: false }) => {
     // Set it up so we collect/return english strings.

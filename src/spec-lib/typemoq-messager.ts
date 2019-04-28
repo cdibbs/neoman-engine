@@ -2,8 +2,6 @@ import { IMock, It, Mock } from "typemoq";
 
 import * as path from 'path';
 import { UserMessager } from '../lib/user-messager';
-import * as i from '../lib/i';
-import * as i18n from 'i18n';
 
 /**
  * Builds a partially-mocked messager that serves the double purpose of building our

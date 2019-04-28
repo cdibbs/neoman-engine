@@ -1,4 +1,4 @@
-import XRegExp = require("xregexp");
+import * as XRegExp  from 'xregexp';
 import { curry } from "./curry";
 import { IRegexer } from "./i-regexer";
 

@@ -1,12 +1,10 @@
 import { inject, injectable } from 'inversify';
 import * as _ from 'underscore';
-import XRegExp = require('xregexp');
+import * as XRegExp from 'xregexp';
 import TYPES from '../di/types';
-import { IFilePatterns, IHandlerService, ITemplate, IUserMessager } from '../i';
+import { IFilePatterns, ITemplate, IUserMessager } from '../i';
 import { RuleMatchResult } from '../models';
-import { IPluginManager } from '../plugin-manager/i-plugin-manager';
 import { IPathTransform, ITransform } from '../user-extensibility/template';
-import { curry } from '../util/curry';
 let NestedError = require('nested-error-stacks');
 
 @injectable()
@@ -17,16 +15,13 @@ export class BaseTransformManager {
 
     constructor(
         @inject(TYPES.FilePatterns) protected filePatterns: IFilePatterns,
-        @inject(TYPES.UserMessager) protected msg: IUserMessager,
-        @inject(TYPES.HandlerService) protected hnd: IHandlerService,
-        @inject(TYPES.PluginManager) protected plugMgr: IPluginManager
+        @inject(TYPES.UserMessager) protected msg: IUserMessager
     ) {
         
     }
 
     configure(tmpl: ITemplate, inputs: { [key: string]: any }) {
         this.inputs = inputs;
-        this.plugMgr.preparePlugins(tmpl.configurations);
         this.tconfigBasePath = tmpl.__tmplConfigPath;
     }
 
@@ -38,7 +33,6 @@ export class BaseTransformManager {
         switch(engine) {
             case "regex": return this.applyReplaceRegex(original, tdef, path);
             case "simple": return this.applyReplaceSimple(original, tdef, path);
-            case "plugin": return this.applyReplacePlugin(original, tdef, path);
             default:
                 throw new Error(`Unimplemented transform engine ${engine}.`);
         }
@@ -50,8 +44,7 @@ export class BaseTransformManager {
         if (typeof tdef.with === "string") {
             return original.replace(pattern, this.preprocess(tdef.with));
         } else {
-            const replacer = await this.buildReplacer(tdef);
-            return original.replace(pattern, replacer);
+            throw new Error(`Custom replacer overrides not currently supported.`);
         }
     }
 
@@ -62,33 +55,7 @@ export class BaseTransformManager {
                 .split(<string>tdef.subject)
                 .join(this.preprocess(tdef.with));
         } else {
-            const replacer = await this.buildReplacer(tdef);
-            return original
-                .split(<string>tdef.subject)
-                .join(replacer(<string>tdef.subject));
-        }
-    }
-
-    async applyReplacePlugin(original: string, tdef: ITransform | IPathTransform, path: string): Promise<string>
-    {
-        try {
-            const plugin = this.plugMgr.getConfig(tdef.using);
-            const options = _.extend({}, plugin.pluginOptions, tdef.params);
-            if (typeof tdef.with === "string") {
-                return plugin
-                    .pluginInstance
-                    .transform(path, original, tdef.subject, this.preprocess(tdef.with), options);
-            } else {
-                const replacer = await this.buildReplacer(tdef);
-                return plugin
-                    .pluginInstance
-                    .transform(path, original, tdef.subject, replacer, options);
-            }
-        } catch (err) {
-            this.msg.i18n({using: tdef.using}).error('Error running plugin from "{using}" configuration:', 3);
-            this.msg.error(err.message, 3);
-            this.msg.error(err.stack, 4);
-            return original;
+            throw new Error(`Custom replacer overrides not currently supported.`);
         }
     }
 
@@ -97,30 +64,18 @@ export class BaseTransformManager {
             throw new Error(this.msg.i18n().mf("Malformed transform definition."));
         
         if (! tdef.using || tdef.using === "regex") {
-            if (this.plugMgr.isPluginDefined("regex")) // Then, the user wants to override the default.
-                return "plugin";
+            /*if (this.plugMgr.isPluginDefined("regex")) // Then, the user wants to override the default.
+                return "plugin";*/
             
             return "regex";
         } else if (tdef.using === "simple") {
-            if (this.plugMgr.isPluginDefined("simple"))
-                return "plugin";
+            /*if (this.plugMgr.isPluginDefined("simple"))
+                return "plugin";*/
 
             return "simple";
         }
 
         return "plugin";
-    }
-
-    async buildReplacer(tdef: ITransform): Promise<(substr: string) => string> {
-        //TODO FIXME not truly implemented
-        if (typeof tdef.with === 'object' && tdef.with.handler)
-        {
-            const hndName = tdef.with.handler;
-            const handler = await this.hnd.resolveAndLoad(this.tconfigBasePath, hndName);
-            return curry.threeOf4(this.replacerWrapper, this, tdef, hndName, handler);
-        }
-
-        throw new Error(`Handler definition missing for transform, or 'with' format invalid.`);
     }
 
     /**
@@ -187,17 +142,6 @@ export class BaseTransformManager {
             return new RuleMatchResult(false, reason, null, ignoresMatch);
         }
 
-        if (configKey) {
-            let configResult = this.configDoesApply(path, configKey);
-            if (configResult.matches) {
-                let reason = "Included because of 'using' directive: {rules[0]}.";
-                return new RuleMatchResult(true, reason, configResult, [configKey]);
-            } else if (! files) { // not defined = nothing overriding config non-match
-                let reason = "Excluded because 'using' directive '{rules[0]}' does not match, and no explicit, overriding inclusion rule exists.";
-                return new RuleMatchResult(false, reason, configResult, [configKey]);
-            }
-        }
-
         // if files weren't defined, implicit inclusion. Otherwise, inclusion only if match.
         let filesMatch = (files && (files instanceof Array) && files.length) ? this.filePatterns.match(path, files) : [];
         if (!files || !files.length) {
@@ -210,21 +154,5 @@ export class BaseTransformManager {
 
         let reason = `Excluded implicitly because 'files' inclusion rules exist, yet none match.` ;
         return new RuleMatchResult(false, reason, null, [path, files.join(',')]);
-    }
-
-    /**
-     * Determines whether a config definition applies to a given path.
-     * Co-recursive with replaceDoesApply.
-     * @param path The path against which to check the config definition.
-     * @param configKey The key of the config containing include/ignore globs to lookup.
-     */
-    configDoesApply(path: string, configKey: string): RuleMatchResult {
-        if (this.plugMgr.isPluginDefined(configKey)) {
-            let c = this.plugMgr.getConfig(configKey);
-            let result = this.replaceDoesApply(path, c.files, c.ignore, undefined);
-            return result;
-        } else {
-            throw new Error(`Configuration key "${configKey}" does not exist.`);
-        }
     }
 }

@@ -1,6 +1,5 @@
 import { Test, TestFixture, AsyncTest, TestCase, TestCases, AsyncSetup, AsyncTeardown, Teardown, Setup } from 'alsatian';
 import { Mock, IMock, It, Times } from 'typemoq';
-import * as c from 'commandpost';
 
 import { Levels, LEVELS, Ii18nFunction, IUserMessager } from './i';
 import { UserMessager } from './user-messager';

@@ -1,7 +1,7 @@
 
-import { FocusTests, Setup, Test, TestFixture, TestCase, FocusTest } from 'alsatian';
+import { Setup, Test, TestFixture, TestCase } from 'alsatian';
 import { Assert } from 'alsatian-fluent-assertions';
-import { IFileSystem, IPath, IUserMessager } from "../../../src/lib/i";
+import { IUserMessager } from "../../../src/lib/i";
 import { mockMessagerFactory } from '../../../src/spec-lib';
 import { Regexer } from './regexer';
 
@@ -114,8 +114,8 @@ export class RegexerTests {
         const source = "With whoaaam am I talking?";
         const result = this.inst.transform(source, "(am I)", "$'-$`-$$-$$$$-$&", {
             "$'": pi => pi.toUpperCase(),
-            "$`": pi => "123",
-            "$&": pi => "matched substring"
+            "$`": () => "123",
+            "$&": () => "matched substring"
         });
         const expected = "With whoaaam  TALKING?-123-$-$$-matched substring talking?";
         Assert(result).equals(expected);

@@ -1,3 +1,3 @@
-import * as i18n from 'i18n';
+import i18next from 'i18next';    
 
-export type Ii18nFunction = typeof i18n.__;
+export type Ii18nFunction = typeof i18next.t;
