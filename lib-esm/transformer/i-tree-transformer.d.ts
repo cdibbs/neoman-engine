@@ -1,9 +1,8 @@
-import { RunOptions, Discovery } from "../models";
+import { RunOptions, TemplateContentFile } from "../models";
 import { ITemplate } from "../i";
 import { Observable } from "rxjs";
-import { Transform } from "../models/transform";
 export interface ITreeTransformer {
-    register(source: Observable<Discovery>, tmpl: ITemplate, options: RunOptions, inputs: {
+    register(source: Observable<TemplateContentFile>, tmpl: ITemplate, inputs: {
         [key: string]: any;
-    }): Observable<Transform>;
+    }, options?: RunOptions): Observable<TemplateContentFile>;
 }

@@ -1,7 +1,3 @@
-var TemplateConfiguration = /** @class */ (function () {
-    function TemplateConfiguration() {
-    }
-    return TemplateConfiguration;
-}());
-export { TemplateConfiguration };
+export class TemplateConfiguration {
+}
 //# sourceMappingURL=configuration.js.map

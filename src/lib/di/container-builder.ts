@@ -12,6 +12,7 @@ import { Ii18nFunction, IUserMessager, IFilePatterns } from '../i';
 import { ITransformManager, IPathTransformManager } from '../transformers/i';
 import { Settings } from '../models';
 import { ITreeTransformer } from "../transformer";
+import { Mapper } from "../mapper";
 
 
 export const containerBuilder = (
@@ -26,6 +27,7 @@ export const containerBuilder = (
     container.bind(TYPES.SettingsType).toDynamicValue(() => Settings);
     container.bind<ITreeTransformer>(TYPES.FSTreeProcessor).to(TreeTransformer);
     container.bind<ITemplateDiscoverer>(TYPES.TemplateDiscoverer).to(TemplateDiscoverer);
+    container.bind<Mapper>(TYPES.Mapper).to(Mapper);
     container.bind<IRegexer>(TYPES.Regexer).to(Regexer);
 
     container.bind<Ii18nFunction>(TYPES.i18n).toConstantValue(i18nTranslate || <Ii18nFunction>((v: string) => v));

@@ -1,8 +1,6 @@
-var Settings = /** @class */ (function () {
-    function Settings() {
+export class Settings {
+    constructor() {
         this.templateDirectory = "";
     }
-    return Settings;
-}());
-export { Settings };
+}
 //# sourceMappingURL=settings.js.map

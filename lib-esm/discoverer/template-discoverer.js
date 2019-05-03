@@ -14,22 +14,21 @@ import { injectable, inject } from "inversify";
 import { filter } from 'rxjs/operators';
 import TYPES from "../di/types";
 import { curry } from "../util";
-var TemplateDiscoverer = /** @class */ (function () {
-    function TemplateDiscoverer(matcher) {
+let TemplateDiscoverer = class TemplateDiscoverer {
+    constructor(matcher) {
         this.matcher = matcher;
     }
-    TemplateDiscoverer.prototype.find = function (source) {
+    find(source) {
         return source.pipe(filter(curry.bindOnly(this.includeOnlyTemplates, this)));
-    };
-    TemplateDiscoverer.prototype.includeOnlyTemplates = function (file) {
+    }
+    includeOnlyTemplates(file) {
         return this.matcher.isMatch(file.absolutePath, "*/.neoman.config/template.json");
-    };
-    TemplateDiscoverer = __decorate([
-        injectable(),
-        __param(0, inject(TYPES.FilePatterns)),
-        __metadata("design:paramtypes", [Object])
-    ], TemplateDiscoverer);
-    return TemplateDiscoverer;
-}());
+    }
+};
+TemplateDiscoverer = __decorate([
+    injectable(),
+    __param(0, inject(TYPES.FilePatterns)),
+    __metadata("design:paramtypes", [Object])
+], TemplateDiscoverer);
 export { TemplateDiscoverer };
 //# sourceMappingURL=template-discoverer.js.map

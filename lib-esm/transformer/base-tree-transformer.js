@@ -12,28 +12,28 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 import { inject, injectable } from 'inversify';
 import TYPES from '../di/types';
+import { RunOptions } from "../models";
 import { curry } from '../util/curry';
 import { mergeMap } from 'rxjs/operators';
-var BaseTreeTransformer = /** @class */ (function () {
-    function BaseTreeTransformer(msg, pathTransformManager, transformManager) {
+let BaseTreeTransformer = class BaseTreeTransformer {
+    constructor(msg, pathTransformManager, transformManager) {
         this.msg = msg;
         this.pathTransformManager = pathTransformManager;
         this.transformManager = transformManager;
     }
-    BaseTreeTransformer.prototype.register = function (source, tmpl, options, inputs) {
+    register(source, tmpl, inputs, options = new RunOptions()) {
         this.transformManager.configure(tmpl, inputs);
         this.pathTransformManager.configure(tmpl, inputs);
-        var transformer = curry.threeOf4(this.transform, this, tmpl.pathTransform, tmpl.transform, options.verbosity);
+        const transformer = curry.threeOf4(this.transform, this, tmpl.pathTransform, tmpl.transform, options.verbosity);
         return source.pipe(mergeMap(transformer));
-    };
-    BaseTreeTransformer = __decorate([
-        injectable(),
-        __param(0, inject(TYPES.UserMessager)),
-        __param(1, inject(TYPES.PathTransformManager)),
-        __param(2, inject(TYPES.TransformManager)),
-        __metadata("design:paramtypes", [Object, Object, Object])
-    ], BaseTreeTransformer);
-    return BaseTreeTransformer;
-}());
+    }
+};
+BaseTreeTransformer = __decorate([
+    injectable(),
+    __param(0, inject(TYPES.UserMessager)),
+    __param(1, inject(TYPES.PathTransformManager)),
+    __param(2, inject(TYPES.TransformManager)),
+    __metadata("design:paramtypes", [Object, Object, Object])
+], BaseTreeTransformer);
 export { BaseTreeTransformer };
 //# sourceMappingURL=base-tree-transformer.js.map

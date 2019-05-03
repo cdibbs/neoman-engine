@@ -1,4 +1,4 @@
-var TYPES = {
+let TYPES = {
     PackageJson: Symbol("package.json"),
     FS: Symbol("FileSystem"),
     Glob: Symbol("Glob"),

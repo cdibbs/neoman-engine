@@ -1,4 +1,4 @@
-export var LEVELS = {
+export const LEVELS = {
     Debug: "Debug",
     Info: "Info",
     Warn: "Warn",

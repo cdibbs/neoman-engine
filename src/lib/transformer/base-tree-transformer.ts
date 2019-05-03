@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import TYPES from '../di/types';
 import { IUserMessager, ITemplate } from "../i";
-import { RunOptions, Discovery } from "../models";
+import { RunOptions, TemplateContentFile } from "../models";
 import { IPathTransformManager, ITransformManager } from "../transformers/i";
 import { Verbosity } from '../types/verbosity';
 import { curry } from '../util/curry';
@@ -9,7 +9,6 @@ import { PathTransforms, Transforms } from '../user-extensibility/template';
 import { Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { ITreeTransformer } from './i-tree-transformer';
-import { Transform } from '../models/transform';
 
 @injectable()
 export abstract class BaseTreeTransformer implements ITreeTransformer {
@@ -22,11 +21,11 @@ export abstract class BaseTreeTransformer implements ITreeTransformer {
     }
 
     public register(
-        source: Observable<Discovery>,
+        source: Observable<TemplateContentFile>,
         tmpl: ITemplate,
-        options: RunOptions,
-        inputs: { [key: string]: any }
-    ): Observable<Transform> {
+        inputs: { [key: string]: any },
+        options: RunOptions = new RunOptions()
+    ): Observable<TemplateContentFile> {
         this.transformManager.configure(tmpl, inputs);
         this.pathTransformManager.configure(tmpl, inputs);
         const transformer = curry.threeOf4(
@@ -42,6 +41,6 @@ export abstract class BaseTreeTransformer implements ITreeTransformer {
         pathTransforms: PathTransforms,
         transforms: Transforms,
         verbosity: Verbosity,
-        discovery: Discovery
-    ): Promise<Transform>;
+        discovery: TemplateContentFile
+    ): Promise<TemplateContentFile>;
 }

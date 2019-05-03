@@ -1,5 +1,5 @@
-var TemplateContentFile = /** @class */ (function () {
-    function TemplateContentFile() {
+export class TemplateContentFile {
+    constructor() {
         this.relativePath = null;
         this.absolutePath = null;
         this.isDirectory = false;
@@ -7,9 +7,7 @@ var TemplateContentFile = /** @class */ (function () {
         this.includedBy = [];
         this.excludedBy = [];
         this.hasContents = false;
-        this.getContents = function () { return Promise.reject("Never initialized."); };
+        this.getContents = () => Promise.reject("Never initialized.");
     }
-    return TemplateContentFile;
-}());
-export { TemplateContentFile };
+}
 //# sourceMappingURL=template-content-file.js.map

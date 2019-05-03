@@ -1,4 +1,4 @@
-export var VERBOSITY = {
+export const VERBOSITY = {
     normal: "normal",
     verbose: "verbose",
     debug: "debug"

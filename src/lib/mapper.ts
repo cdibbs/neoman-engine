@@ -1,6 +1,8 @@
 import { MapperProfile } from './models/mapper-profile';
 import {  MappingExceptionRule } from './models/mapping-exceptions';
+import { injectable } from 'inversify';
 
+@injectable()
 export class Mapper {
     map<TSource, TDest>(
         sourceObj: TSource,
@@ -41,9 +43,9 @@ export class Mapper {
         destObj: TDest,
         profile: MapperProfile<TSource, TDest>
     ): TDest {
-        let key: string;
+        let key: keyof TDest;
         for(key in destObj) {
-            destObj[key] = this.mapPropWithExceptions(key, sourceObj, destObj, profile);
+            this.mapPropWithExceptions(key, sourceObj, destObj, profile);
         }
 
         if (profile && profile.afterMap instanceof Function) {
@@ -54,27 +56,29 @@ export class Mapper {
     }
 
     private mapPropWithExceptions<TSource, TDest>(
-        key: string,
+        key: keyof TDest,
         sourceObj: TSource,
         destObj: TDest,
         profile: MapperProfile<TSource, TDest>
-    ): any {
+    ): void {
         const exceptions = profile.exceptions;
+        if (profile.ignore && profile.ignore.indexOf(key) >= 0) {
+            return;
+        }
+
         if (!exceptions || exceptions[key] === undefined) {
-            return sourceObj[key];
+            destObj[key] = <any>sourceObj[<string>key];
+            return;
         }
 
         if (typeof exceptions[key] === 'string') {
-            return sourceObj[exceptions[key]];
+            destObj[key] = <any>sourceObj[exceptions[<string>key]];
+            return;
         }
 
         if (exceptions[key] instanceof Function) {
-            return exceptions[key](sourceObj, destObj, profile);
-        }
-
-        if (exceptions[key] instanceof Array) {
-            return (<MappingExceptionRule<TSource>[]>exceptions[key])
-                .reduce(e => this.mapPropWithExceptions(key, sourceObj, e, profile), destObj);
+            destObj[key] = <any>exceptions[<string>key](sourceObj, destObj, profile);
+            return;
         }
 
         throw new Error(

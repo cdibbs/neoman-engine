@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const BAP = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
     entry: {
@@ -13,6 +14,8 @@ module.exports = {
         library: 'NeomanEngine',
         umdNamedDefine: true,
     },
+    mode: "production",
+    //plugins: [ new BAP()],
     resolve: {
         extensions: ['.ts', '.tsx', '.js']
     },
@@ -27,9 +30,9 @@ module.exports = {
         {
             test: /\.ts$/,
             exclude: [/node_modules/, /^src\/spec-lib/, /.spec\.ts$/],
-            loader: 'ts-loader',
+            loader: require.resolve('awesome-typescript-loader'),
             options: {
-                configFile: "tsconfig-build.json"
+                configFileName: "tsconfig-build.json"
             },
             include: [__dirname],
         }

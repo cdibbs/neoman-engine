@@ -5,31 +5,23 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { injectable } from 'inversify';
-var isMatch = require('picomatch').isMatch;
-var FilePatterns = /** @class */ (function () {
-    function FilePatterns() {
-    }
-    Object.defineProperty(FilePatterns.prototype, "_isMatch", {
-        get: function () { return isMatch; },
-        enumerable: true,
-        configurable: true
-    });
-    FilePatterns.prototype.match = function (path, patterns) {
-        var _this = this;
-        return patterns.reduce(function (p, cpattern) {
-            if (_this._isMatch(path, cpattern, { dot: true })) {
+const isMatch = require('picomatch').isMatch;
+let FilePatterns = class FilePatterns {
+    get _isMatch() { return isMatch; }
+    match(path, patterns) {
+        return patterns.reduce((p, cpattern) => {
+            if (this._isMatch(path, cpattern, { dot: true })) {
                 p.push(cpattern);
             }
             return p;
         }, []);
-    };
-    FilePatterns.prototype.isMatch = function (path, pattern) {
+    }
+    isMatch(path, pattern) {
         return this._isMatch(path, pattern, { dot: true });
-    };
-    FilePatterns = __decorate([
-        injectable()
-    ], FilePatterns);
-    return FilePatterns;
-}());
+    }
+};
+FilePatterns = __decorate([
+    injectable()
+], FilePatterns);
 export { FilePatterns };
 //# sourceMappingURL=file-patterns.js.map

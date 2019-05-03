@@ -1,6 +1,4 @@
-export * from './discovery';
 export * from './mapper-profile';
-export * from './mapping-exceptions';
 export * from './rule-match-result';
 export * from './run-options';
 export * from './settings';

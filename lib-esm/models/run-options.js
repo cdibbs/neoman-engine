@@ -1,6 +1,6 @@
 import { VERBOSITY } from '../types/verbosity';
-var RunOptions = /** @class */ (function () {
-    function RunOptions() {
+export class RunOptions {
+    constructor() {
         this.verbosity = VERBOSITY.normal;
         this.showExcluded = false;
         this.force = false;
@@ -9,7 +9,5 @@ var RunOptions = /** @class */ (function () {
         this.defaults = false;
         this.simulate = false;
     }
-    return RunOptions;
-}());
-export { RunOptions };
+}
 //# sourceMappingURL=run-options.js.map
