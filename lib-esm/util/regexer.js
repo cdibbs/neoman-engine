@@ -1,4 +1,5 @@
 import * as XRegExp from 'xregexp';
+//declare let XRegExp: typeof import('xregexp').XRegExp;
 import { curry } from "./curry";
 export class Regexer {
     constructor() {

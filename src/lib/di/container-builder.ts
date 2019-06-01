@@ -17,10 +17,17 @@ import { Mapper } from "../mapper";
 
 export const containerBuilder = (
     container?: Container,
+    messenger?: IUserMessager,
     i18nTranslate: Ii18nFunction = null
 ): Container => {
     container = container || new Container();
-    container.bind<IUserMessager>(TYPES.UserMessager).to(UserMessager);
+    if (messenger) {
+        console.log("fancy");
+        container.bind<IUserMessager>(TYPES.UserMessager).toConstantValue(messenger);
+    } else {
+        console.log("not fancy");
+        container.bind<IUserMessager>(TYPES.UserMessager).to(UserMessager);
+    }
     container.bind<ITransformManager>(TYPES.TransformManager).to(ContentTransformManager);
     container.bind<IPathTransformManager>(TYPES.PathTransformManager).to(PathTransformManager);
     container.bind<IFilePatterns>(TYPES.FilePatterns).to(FilePatterns);

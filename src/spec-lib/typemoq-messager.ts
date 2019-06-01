@@ -13,12 +13,12 @@ export let mockMessagerFactory = function (
     {echo = false, out = null}: { echo?: boolean, out?: { mockConsole: IMock<Console> } } = { echo: false, out: null }
 ) {
     // Set it up so we collect/return english strings.
-    i18n.configure({
+    /*i18n.configure({
         locales: ['en_US'],
         defaultLocale: 'en_US',
         syncFiles: true,
         directory: path.join(__dirname, '..', '..', "locales")
-    });
+    });*/
 
     // Create a mock console to back the messager.
     function createCallback(fn: (...args: any[]) => void) {
@@ -37,7 +37,7 @@ export let mockMessagerFactory = function (
         .setup(m => m.error(It.isAnyString()))
         .callback(createCallback(console.log));
 
-    let m = new UserMessager(i18n.__mf);
+    let m = new UserMessager(<Ii18nFunction>(m: any) => m);
     m["console"] = mockConsole.object;
     if (out) {
         out.mockConsole = mockConsole;

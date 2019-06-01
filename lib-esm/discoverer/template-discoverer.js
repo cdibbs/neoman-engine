@@ -22,7 +22,7 @@ let TemplateDiscoverer = class TemplateDiscoverer {
         return source.pipe(filter(curry.bindOnly(this.includeOnlyTemplates, this)));
     }
     includeOnlyTemplates(file) {
-        return this.matcher.isMatch(file.absolutePath, "*/.neoman.config/template.json");
+        return this.matcher.isMatch(file.absolutePath, "**/.neoman.config/template.json");
     }
 };
 TemplateDiscoverer = __decorate([

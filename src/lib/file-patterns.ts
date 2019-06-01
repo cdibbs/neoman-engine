@@ -8,7 +8,7 @@ export class FilePatterns implements i.IFilePatterns {
 
     match(path: string, patterns: string[]): string[] {
         return patterns.reduce((p, cpattern) => {
-            if (this._isMatch(path, cpattern, { dot: true } )) {
+            if (this._isMatch(path, cpattern, { dot: true, posixSlashes: true } )) {
                 p.push(cpattern);
             }
             return p;
@@ -16,6 +16,6 @@ export class FilePatterns implements i.IFilePatterns {
     }
 
     isMatch(path: string, pattern: string): boolean {
-        return this._isMatch(path, pattern, { dot: true });
+        return this._isMatch(path, pattern, { dot: true,  });
     }
 }

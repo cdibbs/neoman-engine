@@ -21,8 +21,8 @@ export class TemplateDiscoverer
     }
 
     private includeOnlyTemplates(
-        file: TemplateContentFile,
+        file: TemplateContentFile
     ): boolean {
-        return this.matcher.isMatch(file.absolutePath, "*/.neoman.config/template.json");
+        return this.matcher.isMatch(file.absolutePath, "**/.neoman.config/template.json");
     }
 }
