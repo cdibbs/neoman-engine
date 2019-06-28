@@ -9,24 +9,25 @@ import { IInputConfig } from "./input";
  */
 export interface IStrictRawTemplate extends ITemplateComments {
     /**
-     * We only require two fields: name and identity. This is enough to identify
+     * A unique id. Templates only require two fields: name and identity. This is enough to identify
      * and run the template. If you specify no other fields, running the template
      * will result in a naive, recursive copy from the template's root.
      */
     identity: string;
     /**
-     * We only require two fields: name and identity. This is enough to identify
-     * and run the template. If you specify no other fields, running the template
+     * The display name. Templates only require two fields: name and identity.
+     * This is enough to identify and run the template. If you specify no other fields, running the template
      * will result in a naive, recursive copy from the template's root.
      */
     name: string;
     /**
-     * Used in case of naming collisions. Should be a reverse domain name.
+     * Identity scope. Used to avoid naming collisions in the broader ecosystem, so this should be globally unique.
+     * We strongly recommend using a reverse domain name.
      * Example: com.example.foo.
      */
     scope?: string;
     /**
-     * The version of this template.
+     * The version of this template. Follow semver: https://semver.org
      */
     version?: string;
     /**
@@ -35,7 +36,13 @@ export interface IStrictRawTemplate extends ITemplateComments {
      * to the template root, itself.
      */
     root?: string;
+    /**
+     * A natural-language description for your template.
+     */
     description?: string;
+    /**
+     * The author or semi-colon-separated authors.
+     */
     author?: string;
     classifications?: string[];
     shortName?: string;
@@ -45,7 +52,7 @@ export interface IStrictRawTemplate extends ITemplateComments {
         [key: string]: string | string[];
     };
     /**
-     * Section to define how to collect user input and what to collect.
+     * Defines user input to your template. Can be used, for example, in path or content transforms.
      */
     input?: IInputConfig;
     /**
@@ -59,16 +66,16 @@ export interface IStrictRawTemplate extends ITemplateComments {
      */
     pathTransform?: PathTransforms;
     /**
-     * List of files to include, if defined. Files not explicitly included
+     * If defined, list of files to include. Files not explicitly included
      * will be excluded. If section is left undefined, all files will be
-     * included, by default.
+     * included, by default. Can be full paths or globs (e.g., \*.txt, **).
      */
-    files?: string[];
+    include?: string[];
     /**
      * List of files to exclude. Applied after explicit inclusions,
-     * and therefore overrides any inclusion.
+     * and therefore overrides any inclusion. Can be full paths or globs.
      */
-    ignore?: string[];
+    exclude?: string[];
     /**
      * List of filter and transform configurations for use within input,
      * transform, and pathTransform sections. Also allows you to specify

@@ -6,6 +6,9 @@ export declare class TemplateContentFile implements ITemplateContentFile {
     size: number;
     includedBy: string[];
     excludedBy: string[];
+    exclude: boolean;
+    originalRelativePath: string;
+    originalAbsolutePath: string;
     hasContents: boolean;
     getContents: () => Promise<string>;
 }

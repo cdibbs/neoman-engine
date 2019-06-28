@@ -1,5 +1,5 @@
 import { BaseTreeTransformer } from "./base-tree-transformer";
-import { IUserMessager } from "../i";
+import { IUserMessager, IFilePatterns } from "../i";
 import { PathTransforms, Transforms } from "../user-extensibility";
 import { Verbosity } from '../types/verbosity';
 import { TemplateContentFile } from "../models/template-content-file";
@@ -17,7 +17,8 @@ export class TreeTransformer extends BaseTreeTransformer {
         @inject(TYPES.UserMessager) protected msg: IUserMessager,
         @inject(TYPES.PathTransformManager) protected pathTransformManager: IPathTransformManager,
         @inject(TYPES.TransformManager) protected transformManager: ITransformManager,
-        @inject(TYPES.Mapper) protected mapper: Mapper
+        @inject(TYPES.Mapper) protected mapper: Mapper,
+        @inject(TYPES.FilePatterns) protected filePatterns: IFilePatterns
     ) {
         super(msg, pathTransformManager, transformManager);
     }
@@ -26,7 +27,9 @@ export class TreeTransformer extends BaseTreeTransformer {
         pathTransforms: PathTransforms,
         contentTransforms: Transforms,
         verbosity: Verbosity,
-        discovery: TemplateContentFile
+        include: string[] = [],
+        ignore: string[] = [],
+        discovery: TemplateContentFile,
     ): Promise<TemplateContentFile> {
         try {
             this.msg.i18n({absPath: discovery.absolutePath}).debug("Include: {absPath}");
@@ -39,7 +42,11 @@ export class TreeTransformer extends BaseTreeTransformer {
             this.msg.i18n({absPath: discovery.absolutePath})
                 .info("Transforming path '{absPath}'...");
             transformed.relativePath = await this.pathTransformManager.applyTransforms(discovery.relativePath, pathTransforms);
-
+            transformed.originalRelativePath = discovery.relativePath;
+            transformed.originalAbsolutePath = discovery.absolutePath;
+            transformed.includedBy = this.filePatterns.match(discovery.relativePath, include);
+            transformed.excludedBy = this.filePatterns.match(discovery.relativePath, ignore);
+            transformed.exclude = transformed.excludedBy.length > 0 || (include.length > 0 && transformed.includedBy.length == 0)
             return transformed;
         } catch (ex) {
             const msg = this.msg

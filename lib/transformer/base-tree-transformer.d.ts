@@ -13,5 +13,5 @@ export declare abstract class BaseTreeTransformer implements ITreeTransformer {
     register(source: Observable<TemplateContentFile>, tmpl: ITemplate, inputs: {
         [key: string]: any;
     }, options?: RunOptions): Observable<TemplateContentFile>;
-    protected abstract transform(pathTransforms: PathTransforms, transforms: Transforms, verbosity: Verbosity, discovery: TemplateContentFile): Promise<TemplateContentFile>;
+    protected abstract transform(pathTransforms: PathTransforms, transforms: Transforms, verbosity: Verbosity, include: string[], ignore: string[], discovery: TemplateContentFile): Promise<TemplateContentFile>;
 }

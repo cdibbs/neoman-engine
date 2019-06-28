@@ -8,6 +8,10 @@ export class TemplateContentFile implements ITemplateContentFile {
     public size: number = 0;
     public includedBy: string[] = [];
     public excludedBy: string[] = [];
+    public exclude: boolean = false;
+
+    public originalRelativePath: string = null;
+    public originalAbsolutePath: string = null;
 
     hasContents: boolean = false;
     getContents: () => Promise<string> = () => Promise.reject("Never initialized.");

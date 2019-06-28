@@ -28,12 +28,14 @@ export abstract class BaseTreeTransformer implements ITreeTransformer {
     ): Observable<TemplateContentFile> {
         this.transformManager.configure(tmpl, inputs);
         this.pathTransformManager.configure(tmpl, inputs);
-        const transformer = curry.threeOf4(
+        const transformer = curry.fiveOf6(
             this.transform,
             this,
             tmpl.pathTransform,
             tmpl.transform,
-            options.verbosity);
+            options.verbosity,
+            tmpl.include,
+            tmpl.exclude);
         return source.pipe(mergeMap(transformer));
     }
 
@@ -41,6 +43,8 @@ export abstract class BaseTreeTransformer implements ITreeTransformer {
         pathTransforms: PathTransforms,
         transforms: Transforms,
         verbosity: Verbosity,
+        include: string[],
+        ignore: string[],
         discovery: TemplateContentFile
     ): Promise<TemplateContentFile>;
 }

@@ -1,5 +1,5 @@
 import { BaseTreeTransformer } from "./base-tree-transformer";
-import { IUserMessager } from "../i";
+import { IUserMessager, IFilePatterns } from "../i";
 import { PathTransforms, Transforms } from "../user-extensibility";
 import { Verbosity } from '../types/verbosity';
 import { TemplateContentFile } from "../models/template-content-file";
@@ -11,7 +11,8 @@ export declare class TreeTransformer extends BaseTreeTransformer {
     protected pathTransformManager: IPathTransformManager;
     protected transformManager: ITransformManager;
     protected mapper: Mapper;
-    constructor(msg: IUserMessager, pathTransformManager: IPathTransformManager, transformManager: ITransformManager, mapper: Mapper);
-    protected transform(pathTransforms: PathTransforms, contentTransforms: Transforms, verbosity: Verbosity, discovery: TemplateContentFile): Promise<TemplateContentFile>;
+    protected filePatterns: IFilePatterns;
+    constructor(msg: IUserMessager, pathTransformManager: IPathTransformManager, transformManager: ITransformManager, mapper: Mapper, filePatterns: IFilePatterns);
+    protected transform(pathTransforms: PathTransforms, contentTransforms: Transforms, verbosity: Verbosity, include: string[], ignore: string[], discovery: TemplateContentFile): Promise<TemplateContentFile>;
     protected contentBuilder(transforms: Transforms, tmplFile: ITemplateContentFile): Promise<string>;
 }
