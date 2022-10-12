@@ -68,7 +68,7 @@
     "fe.js": "^0.1.4",
     "i18next": "^15.1.0",
     "inversify": "^4.13.0",
-    "launchpad": "^0.7.0",
+    "launchpad": "^0.8.0",
     "lodash": "^4.17.11",
     "mock-fs-require-fix": "^1.0.1",
     "mockfs": "^0.1.5",
